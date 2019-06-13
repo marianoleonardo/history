@@ -155,6 +155,9 @@ class Persister:
                 })
             if docs:
                 try:
+                    saved_timestamp = int(datetime.utcnow().timestamp() * 1000)
+                    for d in docs:
+                        d['saved_ts'] = saved_timestamp
                     collection_name = "{}_{}".format(tenant,device_id)
                     self.db[collection_name].insert_many(docs)
                 except Exception as error:
