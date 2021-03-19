@@ -6,7 +6,8 @@ flask run &
 cd ..
 )
 echo Starting dredd
-dredd --hookfiles "./tests/dredd-hooks/*hook.py" \
+dredd --hookfiles "./tests/dredd-hooks/authentication_hook.py" \
+dredd --hookfiles "./tests/dredd-hooks/operation_hook.py" \
  --server "gunicorn history.app:app \
           --bind 0.0.0.0:8000 \
           --reload -R \
