@@ -28,6 +28,7 @@ jobs:
       run: |
         pip install  pip==19.0.3 -r requirements/requirements.txt -r tests/requirements.txt
         pip install codecov
+        python setup.py install
 
     # - name: pylint
     #   run: |
@@ -81,14 +82,36 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build the stack and test
+      env:
+        HISTORY_DB_ADDRESS: "localhost"
       run: |
         docker build -t history -f ./docker/history.docker .
         docker build -t persister -f ./docker/persister.docker .
         ./tests/start-test.sh
+
+  python-test:
+    needs: docker-build
+    name: Python Test #  path to help identify in Status checks each job
+    if: contains(github.event.head_commit.message, 'ci skip') == false # if the commit message has ci skip, doesn't run anything because needs
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: [3.6.x]
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+
+    - name: Use Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: pip install requirements
+      run: |
         python3 -m pytest --cov-report=html --cov=history tests/
 
   docker-hub:
-    needs: docker-build
+    needs: python-test
     name: Build and Publish image to DockerHub
     runs-on: ubuntu-18.04
     # If this is a PR, it won't run
