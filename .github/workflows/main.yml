@@ -67,7 +67,7 @@ jobs:
 
     - name: npm install
       run: |
-        npm ci
+        npm install
         npm install -g dredd@5.1.4 --no-optional
 
 
