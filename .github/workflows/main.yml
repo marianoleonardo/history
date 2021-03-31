@@ -44,14 +44,14 @@ jobs:
     #   npm ci
 
     - name: Build the stack and test
-      env:
-        HISTORY_DB_ADDRESS: "localhost"
       run: |
         docker build -t history -f ./docker/history.docker .
         docker build -t persister -f ./docker/persister.docker .
 
 
     - name: pytest
+      env:
+        HISTORY_DB_ADDRESS: "localhost"
       run: |
         ./tests/start-test.sh
         python3 -m pytest --cov-report=html --cov=history tests/
