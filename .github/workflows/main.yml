@@ -49,10 +49,11 @@ jobs:
       run: |
         docker build -t history -f ./docker/history.docker .
         docker build -t persister -f ./docker/persister.docker .
-        ./tests/start-test.sh
+
 
     - name: pytest
       run: |
+        ./tests/start-test.sh
         python3 -m pytest --cov-report=html --cov=history tests/
 
     - name: Upload coverage to Codecov
