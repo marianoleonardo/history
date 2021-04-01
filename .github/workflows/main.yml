@@ -40,9 +40,6 @@ jobs:
       run: |
         npm install -g dredd@5.1.4 --no-optional
 
-    #   npm install
-    #   npm ci
-
     - name: Build the stack and test
       run: |
         docker build -t history -f ./docker/history.docker .
@@ -53,6 +50,7 @@ jobs:
       env:
         HISTORY_DB_ADDRESS: "localhost"
       run: |
+        docker run -d -p 27017:27017 mongo
         ./tests/start-test.sh
         python3 -m pytest --cov-report=html --cov=history tests/
 
@@ -62,23 +60,6 @@ jobs:
         file: connector/mqtt/locust/coverage.xml
         flags: History
         name: history
-
-  # docker-build:
-  #   needs: npm-build
-  #   name: Docker build
-  #   runs-on: ubuntu-18.04
-  #   steps:
-
-  #   - name: checkout
-  #     uses: actions/checkout@v2
-
-  #   - name: Build the stack and test
-  #     env:
-  #       HISTORY_DB_ADDRESS: "localhost"
-  #     run: |
-  #       docker build -t history -f ./docker/history.docker .
-  #       docker build -t persister -f ./docker/persister.docker .
-  #       ./tests/start-test.sh
 
   docker-hub:
     needs: python-tests
