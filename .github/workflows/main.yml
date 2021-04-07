@@ -58,7 +58,6 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         directory: /
-        file: coverage.xml
         flags: History
         name: history
 
