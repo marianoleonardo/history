@@ -40,7 +40,7 @@ jobs:
       run: |
         npm install -g dredd@5.1.4 --no-optional
 
-    - name: Build the stack and test
+    - name: Build the stack
       run: |
         docker build -t history -f ./docker/history.docker .
         docker build -t persister -f ./docker/persister.docker .
@@ -59,7 +59,6 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         file: coverage.xml
-        # directory: /htmlcov
         flags: History
         name: history
 
